@@ -1,6 +1,8 @@
-﻿<h1>Employer: Name</h1>
+﻿@model TechJobsPersistent.Models.Employer //added
+
+<h1>Employer: @Model.Name</h1>@*added@Model.Name*@
 
 <div>
-    <p>Name: name</p>
-    <p>Location: location</p>
+    <p>Name: @Model.Name</p>@*added@Model.Name*@
+    <p>Location: @Model.Location</p>@*added*@
 </div>
