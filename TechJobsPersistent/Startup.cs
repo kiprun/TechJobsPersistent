@@ -27,7 +27,7 @@ namespace TechJobsPersistent
         {
             services.AddControllersWithViews();
             //added
-            services.AddDbContext<JobDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<JobDbContext>(options => options.UseMySql(Configuration.GetConnectionString("DefaultConnection")));//different
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

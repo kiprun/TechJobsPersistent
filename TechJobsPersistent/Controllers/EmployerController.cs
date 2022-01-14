@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TechJobsPersistent.Data;
 using TechJobsPersistent.Models;
 using TechJobsPersistent.ViewModels;
@@ -13,34 +14,34 @@ namespace TechJobsPersistent.Controllers
 {
     public class EmployerController : Controller
     {
-        private JobDbContext context;// private DbContext variable to perform CRUD operations on the database.
+        private JobDbContext context { get; set; }// private DbContext variable to perform CRUD operations on the database.
 
         public EmployerController(JobDbContext dbContext)
         {
-            context = dbContext;
+            this.context = dbContext;
         }
 
         // GET: /<controller>/
         public IActionResult Index() //pass all of the Employer objects in the the database to the view.
         {
-            List<Employer> employers = context.Employers.ToList();
+            List<Employer> employers = context.Employers.ToList();              
             
             return View(employers);
         }
 
         public IActionResult Add()//create instance of AddEmployerViewModel and pass the instance into the View return method
         {
-            AddEmployerViewModel addEmployerViewModel = new AddEmployerViewModel();
+            AddEmployerViewModel addEmployerViewModel= new AddEmployerViewModel();
 
             return View(addEmployerViewModel);
         }
-
-        [HttpPost]//Process form submissions and make sure that only valid Employer objects are saved to database
+        
+        //Process form submissions and make sure that only valid Employer objects are saved to database
         public IActionResult ProcessAddEmployerForm(AddEmployerViewModel addEmployerViewModel)
         {
             if (ModelState.IsValid)
             {
-                Employer newEmployer = new Employer
+                Employer newEmployer = new Employer()
                 {
                     Name = addEmployerViewModel.Name,
                     Location = addEmployerViewModel.Location
@@ -49,7 +50,7 @@ namespace TechJobsPersistent.Controllers
                 context.Employers.Add(newEmployer);
                 context.SaveChanges();
 
-                return View("/Employer/");
+                return Redirect("/Employer");
             }
             return View(addEmployerViewModel);
         }

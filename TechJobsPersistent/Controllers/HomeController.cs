@@ -32,13 +32,58 @@ namespace TechJobsPersistent.Controllers
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
-            return View();
-        }
+            List<Employer> employers = context.Employers.ToList();
+            List<Skill> skills = context.Skills.ToList();
 
-        public IActionResult ProcessAddJobForm()
-        {
-            return View();
+            AddJobViewModel addJobViewModel = new AddJobViewModel(employers, skills);
+            return View(addJobViewModel);
         }
+        
+        
+        public IActionResult ProcessAddJobForm(AddJobViewModel newAddJobViewModel, string[] selectedSkills)
+        {
+            Employer theEmployer = context.Employers.Find(newAddJobViewModel.EmployerId);
+
+            if (ModelState.IsValid)
+            {
+                Job newJob = new Job
+                {
+                    Name = newAddJobViewModel.Name,
+                    EmployerId = newAddJobViewModel.EmployerId,
+                    Employer = theEmployer
+                };
+
+                foreach (var skill in selectedSkills)
+                {
+                    JobSkill newJobSkill = new JobSkill
+                    {
+                        Job = newJob,
+                        JobId = newJob.Id,
+                        SkillId = Int32.Parse(skill)
+                    };
+
+                    context.JobSkills.Add(newJobSkill);
+                }
+
+                context.Jobs.Add(newJob);
+                context.SaveChanges();
+
+                return Redirect("Index");
+            }
+            // This is the fix so that the newAddJobViewModel has the data needed to populate the procceding View:
+            List<Skill> skills = context.Skills.ToList();
+
+            newAddJobViewModel.Skills = skills;
+
+            List<Employer> employers = context.Employers.ToList();
+
+            newAddJobViewModel.createSelectListItems(employers);
+
+            Console.WriteLine(newAddJobViewModel.Skills);
+
+            return View("~/Views/Home/AddJob.cshtml", newAddJobViewModel);
+        }           
+        
 
         public IActionResult Detail(int id)
         {

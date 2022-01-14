@@ -52,7 +52,7 @@ namespace TechJobsPersistent.Controllers
 
             if (column.ToLower().Equals("all"))
             {
-                jobs = context.Jobs
+                jobs = context.Jobs 
                     .Include(j => j.Employer)
                     .ToList();
 
@@ -80,7 +80,7 @@ namespace TechJobsPersistent.Controllers
 
                     foreach (Job job in jobs)
                     {
-                        List<JobSkill> jobSkills = context.JobSkills
+                        List<JobSkill> jobSkills = context.JobSkills    
                         .Where(js => js.JobId == job.Id)
                         .Include(js => js.Skill)
                         .ToList();
