@@ -1,13 +1,14 @@
 --Part 1
-SELECT *
-FROM jobs
+ID Int
+Name LongText
+Employer INT
 
 --Part 2
 SELECT name
 From employers
 WHERE location = "Saint Louis"
 --Part 3
-SELECT *
+SELECT name, description
 FROM skills
 INNER JOIN JobSkills 
 ON Skills.Id = JobSkills.SkillId
